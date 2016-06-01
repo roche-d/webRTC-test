@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Question 1</title>
+    <script src="signalingChannelFactory.js"></script>
+    <script src="first_step.js"></script>
+    <script language="javascript" type="text/javascript">
+        var CALLER_ID = Date.now();
+        window.addEventListener('load', function(){
+            document.getElementById('userid').innerHTML = CALLER_ID;
+            initClient({
+                messageCallback: function(data){
+                    var recvList = document.getElementById('received'),
+                        newli = document.createElement('li'),
+                        text = document.createTextNode('[from ' + data.from + '] ' + data.message);
+                    newli.appendChild(text);
+                    recvList.appendChild(newli);
+                },
+                newPeerCallback: addUserToList,
+                peerDisconnectedCallback: removeUserFromList
+            });
+            document.getElementById('send').onclick = sendMsgToSelectedUser;
+        }, false);
+    </script>
+</head>
+<body>
+<h2>Question 1</h2>
+<p>You are logged in as <span id="userid"></span></p>
+<h3>List of users</h3>
+
+<form action="" id="userlist">
+</form>
+<textarea id="message"></textarea>
+<button id="send">Send message to selected user</button>
+<h3>Messages received</h3>
+<ul id="received">
+
+</ul>
+</body>
+</html>

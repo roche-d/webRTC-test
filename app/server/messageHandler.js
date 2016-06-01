@@ -19,9 +19,26 @@ function onMessage(ws, message){
     }
 }
 
+function checkForDisconnectedClients() {
+    for (var p in connectedPeers){
+        if (connectedPeers[p] && connectedPeers[p].readyState === 3) {
+            delete connectedPeers[p];
+        }
+    }
+}
+
 function onInit(ws, id){
+    checkForDisconnectedClients();
     console.log("init from peer:", id);
     ws.id = id;
+    var list = [];
+    for (var p in connectedPeers){
+        list.push(p);
+    }
+    ws.send(JSON.stringify({
+        type: 'peerlist',
+        list: list
+    }));
     connectedPeers[id] = ws;
 }
 
@@ -30,7 +47,7 @@ function onOffer(offer, destination, source){
     connectedPeers[destination].send(JSON.stringify({
         type:'offer',
         offer:offer,
-        source:source,
+        source:source
     }));
 }
 
@@ -39,7 +56,7 @@ function onAnswer(answer, destination, source){
     connectedPeers[destination].send(JSON.stringify({
         type: 'answer',
         answer: answer,
-        source: source,
+        source: source
     }));
 }
 
@@ -48,7 +65,7 @@ function onICECandidate(ICECandidate, destination, source){
     connectedPeers[destination].send(JSON.stringify({
         type: 'ICECandidate',
         ICECandidate: ICECandidate,
-        source: source,
+        source: source
     }));
 }
 
