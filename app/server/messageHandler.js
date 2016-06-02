@@ -29,7 +29,6 @@ function checkForDisconnectedClients() {
 
 function onInit(ws, id){
     checkForDisconnectedClients();
-    console.log("init from peer:", id);
     ws.id = id;
     var list = [];
     for (var p in connectedPeers){

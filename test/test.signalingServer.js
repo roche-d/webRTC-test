@@ -18,6 +18,27 @@ describe('signalingServer', function() {
             ws.id.should.be.equal(1);
             messageHandler._connectedPeers[1].should.be.equal(ws);
         });
+        it('onInitReceiveList', function() {
+            var spy, ws, ws1, ws2;
+            ws = new WsMock();
+            var message = {
+                type:"init",
+                init:3
+            };
+            spy = sinon.spy(ws, 'send');
+            ws1 = new WsMock();
+            ws1.id = 1;
+            ws2 = new WsMock();
+            ws2.id = 2;
+            
+            messageHandler._connectedPeers[1] = ws1;
+            messageHandler._connectedPeers[2] = ws2;
+
+            messageHandler(ws, message);
+            spy.calledOnce.should.be.true;
+            var expectedResponse = '{"type":"peerlist","list":["1","2"]}';
+            spy.firstCall.args[0].should.eql(expectedResponse);
+        });
     });
     describe('Messages', function() {
         var spy, ws1, ws2;
