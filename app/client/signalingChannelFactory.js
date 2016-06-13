@@ -39,6 +39,9 @@ function SignalingChannel(id){
             case "peerlist":
                 self.onPeerList(objMessage.list);
                 break;
+            case "peersignal":
+                self.onPeerSignal(objMessage.signal);
+                break;
             default:
                 throw new Error("invalid message type");
         }
@@ -88,6 +91,11 @@ function SignalingChannel(id){
     //default handler, should be overriden
     this.onPeerList = function(list){
         console.log(list);
+    };
+
+    //default handler, should be overriden
+    this.onPeerSignal = function(signal){
+        console.log(signal);
     };
 }
 

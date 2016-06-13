@@ -1,6 +1,7 @@
 var  connectedPeers = {};
 function onMessage(ws, message){
     var type = message.type;
+    console.log('onMsg ', type);
     switch (type) {
         case "ICECandidate":
             onICECandidate(message.ICECandidate, message.destination, ws.id);
@@ -34,9 +35,16 @@ function onInit(ws, id){
     for (var p in connectedPeers){
         list.push(p);
     }
+    var signal = undefined;
+
+    if (list.length > 0) {
+        var idx = Math.floor((Math.random() * list.length));
+        signal = list[idx];
+    }
+
     ws.send(JSON.stringify({
-        type: 'peerlist',
-        list: list
+        type: 'peersignal',
+        signal: signal
     }));
     connectedPeers[id] = ws;
 }
